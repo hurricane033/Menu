@@ -27,52 +27,19 @@ const menu = [
     id: 4,
     title: "Froyo",
     category: "dessert",
-    price: 5,
+    price: 3,
     img: "https://images.unsplash.com/photo-1641665273583-45bfc9f3d292?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     desc: `ombucha chillwave fanny pack 3 wolf moon street art photo booth before they sold out organic viral.`,
   },
 ];
 
 const sectionCenter = document.querySelector('.section-center');
-
+const container = document.querySelector('.btn-container');
 
 window.addEventListener('DOMContentLoaded', function () {
   displayMenuItems(menu);
-  const categories = menu.reduce(function (values, item){
-    if(values.includes(item.category)){
-      values.push(item.category);
-    }
-    return values;
-  },
-  ["all"]
-);
-
-
-  const filterButtons = categories.map(function(category){
-    return `<button class="btn" type="button" data-id=${category}>${category}</button>`
-  }).join(filterButtons);
+  displayMenuButtons(menu);
 });
-
-filterButtons.forEach(function (btn) {
-  btn.addEventListener("click", function (e) {
-    const category = e.currentTarget.dataset.id;
-    const menuCategory = menu.filter(function (menuItem) {
-      if (menuItem.category === category) {
-        return menuItem;
-      }
-    });
-
-    if (category === "all") {
-      displayMenuItems(menu);
-    }
-
-    else {
-      displayMenuItems(menuCategory);
-    };
-  });
-});
-
-
 
 
 function displayMenuItems(menuItems) {
@@ -83,7 +50,7 @@ function displayMenuItems(menuItems) {
     <div class="item-info">
         <header>
             <h4>${item.title}</h4>
-            <h4 class=${item.price}>10$</h4>
+            <h4 class=price>${item.price}</h4>
         </header>
         <p class="item-text">${item.desc}</p>
     </div>
@@ -93,3 +60,38 @@ function displayMenuItems(menuItems) {
   sectionCenter.innerHTML = displayMenu;
 };
 
+
+function displayMenuButtons() {
+  const categories = menu.reduce(function (values, item) {
+    if (!values.includes(item.category)) {
+      values.push(item.category);
+    }
+    return values;
+  },
+    ["all"]
+  );
+  const categoryButtons = categories.map(function (category) {
+    return `<button class="btn" type="button" data-id=${category}>${category}</button>`;
+  }).join("");
+  container.innerHTML = categoryButtons;
+  const filterButtons = container.querySelectorAll('.btn');
+
+  filterButtons.forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      const category = e.currentTarget.dataset.id;
+      const menuCategory = menu.filter(function (menuItem) {
+        if (menuItem.category === category) {
+          return menuItem;
+        }
+      });
+
+      if (category === "all") {
+        displayMenuItems(menu);
+      }
+
+      else {
+        displayMenuItems(menuCategory);
+      };
+    });
+  });
+}
